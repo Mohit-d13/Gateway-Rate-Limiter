@@ -1,0 +1,68 @@
+# --- uv & Python Virtual Environments ---
+# Crucial: Always ignore local virtual environments. They are platform-dependent 
+# and will break inside the container if copied from a different OS.
+.venv/
+venv/
+ENV/
+.uv/
+
+# --- Python Build & Cache Artifacts ---
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+htmlcov/
+.toast/
+.nobackup
+.python-version
+
+# --- Package Build & Distribution Artifacts ---
+# If your pyproject.toml defines a buildable package, ignore local build outputs.
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- Environment Variables & Credentials ---
+# Prevent production image leaks of API keys and database secrets.
+.env
+*.env
+.env.*
+!.env.example
+secrets.toml
+
+# --- IDEs, Editors & OS Overhead ---
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# --- Testing & CI/CD Logs ---
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.tox/
+.nox/
+.coverage
+coverage.xml
+nosetests.xml
+*.log

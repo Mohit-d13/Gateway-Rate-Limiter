@@ -1,0 +1,11 @@
+# Pre-commit hook configuration. Runs Ruff (lint + format) on every commit
+repos:
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  # ruff version.
+  rev: v0.15.16
+  hooks:
+  # Run the linter.
+  - id: ruff-check
+    args: [ --fix ]
+  # Runn the formatter
+  - id: ruff-format

@@ -1,0 +1,84 @@
+[project]
+name = "rate-limiter"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.136.3",
+    "pre-commit>=4.6.0",
+    "redis[hiredis]>=8.0.0",
+    "ruff>=0.15.16",
+]
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories
+exclude = [
+	".bzr",
+	".direnv",
+	".eggs",
+	".git",
+	".git-rewrite",
+	".hg",
+	".ipynb_checkpoints",
+	".mypy_cache",
+	".nox",
+	".pants.d",
+	".pyenv",
+	".pytest_cache",
+	".pytype",
+	".ruff_cache",
+	".svn",
+	".tox",
+	".venv",
+	".vscode",
+	"__pypackages__",
+	"_build",
+	"buck-out",
+	"build",
+	"dist",
+	"node_modules",
+	"site-packages",
+	"venv",
+]
+
+# Line formating, python version and preview
+line-length = 78
+indent-width = 4
+target-version = 'py312'
+preview = true
+
+[tool.ruff.lint]
+select = [
+	'E',	# pycodestyle
+	'F',  	# pyflakes
+	'UP', 	# pyupgrade
+	'B',  	# flake8-bugbear
+	'SIM',	# flake8-simplify
+	'I',	# isort
+	"ARG",	# unused arguments
+	"ASYNC",# async anti-pattern
+	"RUF",	# ruff-native rules
+	"C90",	# complexity
+	"FAST", # FastAPI rules
+]
+
+ignore = []
+
+# Allow fix for all enabled rules except FastAPI rules.
+fixable = ["ALL"]
+unfixable = ["FAST001", "FAST002", "FAST003"]
+
+[tool.ruff.format]
+# Use double quotes for strings
+quote-style = "double"
+
+# Use tab for indentation
+indent-style = "space"
+
+# Respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Automatically detect the appropiate line ending.
+line-ending = "auto"
+
