@@ -25,7 +25,7 @@ jobs:
         runs-on: ubuntu-latest
         env: 
             DOC_FILE: prod.Dockerfile
-            IMAGE_TAG: ${{ vars.DOCKER_USERNAME }}/gateway-rate-limiter:$1.{{ github.run_number }}
+            IMAGE_TAG: ${{ vars.DOCKER_USERNAME }}/gateway-rate-limiter:1.${{ github.run_number }}
         
         steps:
         -   name: Upload application code
