@@ -1,4 +1,4 @@
-name: Compile and test new features integration
+name: Test new features integration
 
 on:
     workflow_dispatch:
@@ -7,7 +7,15 @@ on:
         -   'feature/**'
         paths:
         -   'core/**'
+        -   'tests/**'
         -   'uv.lock'
+    pull_request:
+        branches:
+        -   'main'
+        paths:
+        -   'core/**'
+        -   'tests/**'
+        -   'uv.lock' 
 
 jobs:
     compile:
@@ -26,7 +34,19 @@ jobs:
                 cache-dependency-glob: "**/uv.lock" 
             
         -   name: Install project dependencies
-            run: uv sync --locked --no-dev
+            run: uv sync --frozen
 
         -   name: Check import resolve
             run: uv run python -c "import core.main"
+
+        -   name: Run linter and fix safe issues
+            run: uv run ruff check pytest_github_report
+
+        -   name: Run unit tests and display report
+            if: always()
+            env:
+                pytest_github_report: true
+                pytest_report_title: "Report with Verbosity"
+                pytest_use_zeros: true
+                pytest_verbosity: 1
+            run: uv run pytest tests/
