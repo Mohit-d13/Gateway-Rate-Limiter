@@ -11,7 +11,10 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "fakeredis>=2.36.1",
     "pre-commit>=4.6.0",
+    "pytest>=9.1.0",
+    "pytest-asyncio>=1.4.0",
     "ruff>=0.15.16",
 ]
 
@@ -47,7 +50,7 @@ exclude = [
 ]
 
 # Line formating, python version and preview
-line-length = 78
+line-length = 90
 indent-width = 4
 target-version = 'py312'
 preview = true

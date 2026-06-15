@@ -8,6 +8,10 @@ from core.config import settings
 
 # Initialize the Redis client
 def create_redis_client() -> redis.Redis:
+    """
+    Creates a Redis client object and
+    return the object back to the caller
+    """
     return redis.from_url(
         settings.REDIS_URL,
         encoding="utf-8",
