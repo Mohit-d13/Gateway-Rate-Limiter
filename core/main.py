@@ -1,13 +1,13 @@
 import time
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from core.client import RedisClient, create_redis_client
 from core.identity import extract_identity
 from core.policy import get_policy, seed_default_policies
-from core.schemas import BasePolicy, MetricsPolicy, ReadPolicy, UpdatePolicy
+from core.schemas import MetricsPolicy, ReadPolicy, UpdatePolicy
 from core.utils import BUCKET_SCRIPT
 
 
@@ -53,9 +53,7 @@ async def rate_limit_middleware(request: Request, call_next):
     """
     # Skip rate limiting for health/meta routes
     SKIP_PATHS = {"/healthz", "/docs", "/openapi.json"}
-    if request.url.path in SKIP_PATHS or request.url.path.startswith(
-        "/admin/"
-    ):
+    if request.url.path in SKIP_PATHS or request.url.path.startswith("/admin/"):
         return await call_next(request)
 
     identity = extract_identity(request)
@@ -101,26 +99,30 @@ async def update_policy(
     """
     Update rate limiting policies
     """
-    policies = BasePolicy(dimension=dimension, identity_id=identity_id)
-    key = f"policy:{policies.dimension}:{policies.identity_id}"
+    if dimension not in ("api_key", "ip", "tenant_id"):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid parameter:Dimension must be 'api_key', 'ip' or 'tenant_id'",
+        )
+
+    key = f"policy:{dimension}:{identity_id}"
     await redis.hset(
         key, mapping={"capacity": metrics.capacity, "window": metrics.window}
     )
 
-    return ReadPolicy(
-        capacity=metrics.capacity, window=metrics.window, key=key
-    )
+    return ReadPolicy(capacity=metrics.capacity, window=metrics.window, key=key)
 
 
-@app.get(
-    "/admin/policy/{dimension}/{identity_id}", response_model=MetricsPolicy
-)
+@app.get("/admin/policy/{dimension}/{identity_id}", response_model=MetricsPolicy)
 async def read_policy(dimension: str, identity_id: str, redis: RedisClient):
     """
     Get policy metrics
     """
-    policies = BasePolicy(dimension=dimension, identity_id=identity_id)
-    metrics = await get_policy(
-        policies.dimension, policies.identity_id, redis
-    )
+    if dimension not in ("api_key", "ip", "tenant_id"):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid parameter:Dimension must be 'api_key', 'ip' or 'tenant_id'",
+        )
+
+    metrics = await get_policy(dimension, identity_id, redis)
     return metrics
