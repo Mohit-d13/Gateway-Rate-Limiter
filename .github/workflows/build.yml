@@ -22,7 +22,7 @@ jobs:
         uses: ./.github/workflows/release.yml
         with:
             registry: 'ghcr.io'
-            containerRegistry: '${{ github.repository }}'
+            containerRegistry: 'ghcr.io/${{ github.repository }}'
             dockerfilePath: 'prod.Dockerfile'
             namespace: 'gateway'
         secrets:
