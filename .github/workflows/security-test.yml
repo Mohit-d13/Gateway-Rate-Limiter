@@ -1,0 +1,17 @@
+name: Analyze code security with Testing
+
+env:
+    containerRegistry: "ghcr.io/${{ github.repository }}"
+    dockerfilePath: "prod.Dockerfile"
+
+on:
+    workflow_dispatch:
+
+jobs:
+    print:
+        runs-on: ubuntu-latest
+        steps:
+        -   run: |
+                echo ${{ env.containerRegistry }}
+                echo ${{ github.repository }}
+                echo ${{ github.repository_owner }}

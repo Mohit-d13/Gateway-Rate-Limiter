@@ -1,4 +1,6 @@
 name: Test new features integration
+permissions:
+    contents: read
 
 on:
     workflow_dispatch:
@@ -40,13 +42,13 @@ jobs:
             run: uv run python -c "import core.main"
 
         -   name: Run linter and fix safe issues
-            run: uv run ruff check pytest_github_report
+            run: uv run ruff check .
 
         -   name: Run unit tests and display report
             if: always()
             env:
                 pytest_github_report: true
-                pytest_report_title: "Report with Verbosity"
+                pytest_report_title: "Test Report Summary"
                 pytest_use_zeros: true
                 pytest_verbosity: 1
             run: uv run pytest tests/
