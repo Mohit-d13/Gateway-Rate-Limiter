@@ -77,11 +77,6 @@ jobs:
                 username: ${{ secrets.registryUsername }}
                 password: ${{ secrets.registryPassword }}
 
-        -   name: Show inputs
-            run: |
-                echo "registry=${{ inputs.registry }}"
-                echo "containerRegistry=${{ inputs.containerRegistry }}"
-
         -   name: Push image
             uses: docker/build-push-action@v7.2.0
             with:
