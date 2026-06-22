@@ -15,7 +15,7 @@ from core.utils import BUCKET_SCRIPT
 async def lifespan(app: FastAPI):
     # Startup
     # Create redis client and attach it to FastAPI app instance
-    redis_client = create_redis_client()
+    redis_client = await create_redis_client()
     app.state.redis = redis_client
 
     # Load the Lua script into Redis and store the SHA for later use
