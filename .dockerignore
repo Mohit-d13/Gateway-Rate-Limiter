@@ -5,6 +5,7 @@
 venv/
 ENV/
 .uv/
+secrets/
 
 # --- Python Build & Cache Artifacts ---
 **/__pycache__/
@@ -37,7 +38,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 .pre-commit-config.yaml
-deployment-chart/
+deployment/
 
 # --- Git & Version Control ---
 .git/
@@ -74,6 +75,8 @@ Thumbs.db
 coverage.xml
 nosetests.xml
 *.log
+tests/
+test*.py
 
 # --- DockerFiles ---
 Dockerfile
@@ -84,5 +87,5 @@ compose.y*ml
 .dockerignore
 
 README.md
-LISENCE
+LICENSE
 

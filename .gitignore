@@ -5,6 +5,7 @@
 venv/
 ENV/
 .uv/
+secrets/
 
 # --- Python Build & Cache Artifacts ---
 **/__pycache__/

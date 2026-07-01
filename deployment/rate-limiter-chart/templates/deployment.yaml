@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "deployment-chart.fullname" . }}
+  name: {{ include "rate-limiter-chart.fullname" . }}
   labels:
-    {{- include "deployment-chart.labels" . | nindent 4 }}
+    {{- include "rate-limiter-chart.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "deployment-chart.selectorLabels" . | nindent 6 }}
+      {{- include "rate-limiter-chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,31 +18,21 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "deployment-chart.labels" . | nindent 8 }}
+        {{- include "rate-limiter-chart.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "deployment-chart.serviceAccountName" . }}
+      serviceAccountName: {{ include "rate-limiter-chart.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      initContainers:
-      - name: {{ .Values.initContainer.name }}
-        image: {{ .Values.initContainer.image }}
-        command: 
-        - sh
-        - -c
-        - |
-          until redis-cli -h {{ .Values.redis.fullnameOverride }}-master ping | grep PONG; do
-            echo "Waiting for Redis..."
-            sleep 2
-          done
       containers:
         - name: {{ .Chart.Name }}
           {{- with .Values.securityContext }}
@@ -55,12 +45,14 @@ spec:
           - name: REDIS_PORT
             value: "{{ .Values.redis.master.containerPorts.redis }}"
           - name: REDIS_DB
-            value: "0"
+            value: "{{ .Values.app.db }}"
+          - name: PASSWORD_FILE_PATH
+            value: "{{ .Values.app.passwordFilePath }}"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.containerPort }}
+              containerPort: {{ .Values.app.containerPort }}
               protocol: TCP
           {{- with .Values.startupProbe }}
           startupProbe:
