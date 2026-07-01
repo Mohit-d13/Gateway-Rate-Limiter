@@ -2,10 +2,15 @@ services:
   redis:
     image: redis:7.2-alpine
     container_name: rl-redis
+    restart: always
+    secrets:
+      - redis-password
     ports:
     - '6379:6379'
     volumes:
     - redis-data:/data
+    environment:
+      PASSWORD_FILE_PATH: /run/secrets/redis-password
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 5s
@@ -23,6 +28,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
+      PASSWORD_FILE_PATH: /run/secrets/redis-password
     develop:
       watch:
       - action: rebuild
@@ -30,6 +36,11 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    secrets:
+      - redis-password
 
 volumes:
   redis-data:
+secrets:
+  redis-password:
+    file: ./secrets/redis-creds/password

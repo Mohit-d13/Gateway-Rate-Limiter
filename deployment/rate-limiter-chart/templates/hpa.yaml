@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "deployment-chart.fullname" . }}
+  name: {{ include "rate-limiter-chart.fullname" . }}
   labels:
-    {{- include "deployment-chart.labels" . | nindent 4 }}
+    {{- include "rate-limiter-chart.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "deployment-chart.fullname" . }}
+    name: {{ include "rate-limiter-chart.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "deployment-chart.fullname" . }}
+  name: {{ include "rate-limiter-chart.fullname" . }}
   labels:
-    {{- include "deployment-chart.labels" . | nindent 4 }}
+    {{- include "rate-limiter-chart.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -35,7 +35,7 @@ spec:
             {{- end }}
             backend:
               service:
-                name: {{ include "deployment-chart.fullname" $ }}
+                name: {{ include "rate-limiter-chart.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}

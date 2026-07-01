@@ -1,6 +1,6 @@
 apiVersion: v2
-name: deployment-chart
-description: An application gateway with rate-limiting filter
+name: rate-limiter-chart
+description: A gateway application that provides rate limiting capabilities for APIs and services with redis as the backend store.
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -22,8 +22,8 @@ version: 0.1.0
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "1.16.0"
-# redis dependency for storing rate limiter in-memory state
+# List of Rate limiter chart dependencies
 dependencies:
 - name: redis
-  repository: https://charts.bitnami.com/bitnami
   version: 27.0.10
+  repository: https://charts.bitnami.com/bitnami
