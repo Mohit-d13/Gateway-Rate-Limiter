@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "rate-limiter-chart.fullname" . }}-test
+  labels:
+    {{- include "rate-limiter-chart.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      containers:
+        - name: {{ .Values.app.test.name }}
+          image: {{ .Values.app.test.image }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: GATEWAY_URI
+              value: {{ include "rate-limiter-chart.fullname" . | quote }}
+          command: 
+            - sh
+            - -c
+            - |
+              {{ .Values.app.test.volume.path }}/test-rate-limiter.sh http://$GATEWAY_URI
+          {{- with .Values.app.test.volume }}
+          volumeMounts:
+            - name: {{ .name }}
+              mountPath: {{ .path }}
+          {{- end }}
+      {{- with .Values.app.test.volume }}
+      volumes:
+        - name: {{ .name }}
+          configMap:
+            name: {{ include "rate-limiter-chart.fullname" $ }}-test-config
+            defaultMode: {{ .mode }}
+            optional: {{ .optional }}
+      {{- end}}
+      restartPolicy: {{ .Values.app.test.restartPolicy }}
