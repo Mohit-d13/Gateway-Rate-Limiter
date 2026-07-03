@@ -33,6 +33,25 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      initContainers:
+      - name: {{ .Values.init.name }}
+        image: {{ .Values.init.image }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: REDIS_HOST
+          value: "{{ .Values.redis.fullnameOverride }}-master"
+        - name: REDIS_PORT
+          value: "{{ .Values.redis.master.containerPorts.redis }}"
+        command: 
+        - sh
+        - -c
+        - |
+          echo "Waiting for Redis at $REDIS_HOST:$REDIS_PORT..."
+          until nc -z $REDIS_HOST $REDIS_PORT; do
+            echo "Redis is not available yet. Retrying in 2 seconds..."
+            sleep 2
+          done
+          echo "Redis is available. Proceeding with the main application container."
       containers:
         - name: {{ .Chart.Name }}
           {{- with .Values.securityContext }}
@@ -40,14 +59,14 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           env:
-          - name: REDIS_HOST
-            value: "{{ .Values.redis.fullnameOverride }}-master"
-          - name: REDIS_PORT
-            value: "{{ .Values.redis.master.containerPorts.redis }}"
-          - name: REDIS_DB
-            value: "{{ .Values.app.db }}"
-          - name: PASSWORD_FILE_PATH
-            value: "{{ .Values.app.passwordFilePath }}"
+            - name: REDIS_HOST
+              value: "{{ .Values.redis.fullnameOverride }}-master"
+            - name: REDIS_PORT
+              value: "{{ .Values.redis.master.containerPorts.redis }}"
+            - name: REDIS_DB
+              value: "{{ .Values.app.db }}"
+            - name: PASSWORD_FILE_PATH
+              value: "{{ .Values.app.passwordFilePath }}"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:

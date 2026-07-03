@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "rate-limiter-chart.fullname" . }}-test-config
+  labels:
+    {{- include "rate-limiter-chart.labels" . | nindent 4 }}
+data:
+  test-rate-limiter.sh: |
+    #!/bin/sh
+    run_test() {
+      check_response "$1"
+      echo
+      echo "Updating policy..."
+      update_policy "$1"
+      echo
+      echo "Sending requests (burst 1)..."
+      test_requests "$1"
+      echo
+      echo "Waiting for window to reset (32s)..."
+      sleep 32
+      echo "Sending requests (burst 2)..."
+      test_requests "$1"
+    }
+    check_response() {
+      if curl -fsS -H "X-API-Key: mykey" -H "X-Tenant-ID: acme" \
+          "$1" >/dev/null
+      then
+        echo
+        echo "Successfully connected to API endpoint."
+      else
+        echo
+        echo "Attempted connection to API endpoint Failed."
+        exit 1
+      fi
+    }
+    update_policy() {
+      curl -X PUT "$1/admin/policy/api_key/mykey" \
+        -H "Content-Type: application/json" \
+        -d '{"dimension": "api_key", "identity_id": "mykey", "capacity": 3, "window": 30}'
+      echo
+    }
+    test_requests() {
+      for i in $(seq 1 5)
+      do
+        curl -sS -w " → %{http_code}\n" \
+          -H "X-API-Key: mykey" -H "X-Tenant-ID: acme" "$1"
+      done
+    }
+    if [ "$#" -eq 0 ]
+    then
+      echo "Usage: ./rate-limiter-test.sh http://example:8080"
+      exit 1
+    fi
+    run_test "$1"
