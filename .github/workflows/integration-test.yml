@@ -25,7 +25,7 @@ jobs:
 
         steps:
         -   name: Checkout source code
-            uses: actions/checkout@v6.0.3
+            uses: actions/checkout@v7.0.0
 
         -   name: Setup python with uv
             uses: astral-sh/setup-uv@v8.2.0
@@ -42,10 +42,12 @@ jobs:
             run: uv run python -c "import core.main"
 
         -   name: Run linter and fix safe issues
-            run: uv run ruff check .
+            # ruff check for linting check and ruff format for formatting consistency check
+            run: |
+                uv run ruff check .
+                uv run ruff format check .          
 
         -   name: Run unit tests and display report
-            if: always()
             env:
                 pytest_github_report: true
                 pytest_report_title: "Test Report Summary"
