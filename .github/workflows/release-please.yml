@@ -1,0 +1,23 @@
+name: Create and update release PRs and tags
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - 'core/**'
+            - 'prod.Dockerfile'
+            - 'uv.lock'
+    workflow_dispatch:
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    release-please:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: googleapis/release-please-action@v3.5.0
+              with:
+                  release-type: 'simple'
