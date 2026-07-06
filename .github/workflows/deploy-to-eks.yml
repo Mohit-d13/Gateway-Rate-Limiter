@@ -1,0 +1,63 @@
+name: Deploy Application on to AWS EKS
+
+on:
+    workflow_call:
+        inputs:
+            image_tag:
+                required: true
+                type: string
+    workflow_dispatch:
+        inputs:
+            image_tag:
+                required: true
+                type: string
+                default: latest
+
+permissions:
+    contents: read
+    id-token: write
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        environment:
+            name: Staging
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v7.0.0
+
+            -   name: Configure AWS credentials via OIDC
+                uses: aws-actions/configure-aws-credentials@v4
+                with:
+                    role-to-assume: ${{ vars.ROLE_ARN }}
+                    aws-region: ${{ vars.REGION }}
+
+            -   name: Verify AWS identity
+                run: aws sts get-caller-identity
+
+            -   name: Install kubectl
+                uses: azure/setup-kubectl@v3
+                
+            -   name: Install helm
+                uses: azure/setup-helm@v3
+
+            -   name: Configure kubeconfig
+                run: |
+                    aws eks update-kubeconfig --name ${{ vars.CLUSTER_NAME }} --region ${{ vars.REGION }}
+
+            -   name: Deploy application to EKS
+                run: |
+                    helm upgrade -i gateway ./deployment/rate-limiter-chart \
+                    --set image.tag=${{ inputs.image_tag }}
+                    --namespace gateway \
+                    --create-namespace \
+                    --wait \
+                    --atomic \
+
+            -   name: Verify deployment
+                run: |
+                    kubectl rollout status deployment/gateway -n gateway
+
+            -   name: Run End to End Test
+                run: |
+                    helm test gateway -n gateway

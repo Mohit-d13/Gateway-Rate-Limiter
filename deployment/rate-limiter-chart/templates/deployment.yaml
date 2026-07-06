@@ -67,7 +67,7 @@ spec:
               value: "{{ .Values.app.db }}"
             - name: PASSWORD_FILE_PATH
               value: "{{ .Values.app.passwordFilePath }}"
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ required "value 'image.tag' is required" .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
