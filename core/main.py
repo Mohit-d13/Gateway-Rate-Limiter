@@ -37,6 +37,9 @@ app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 def main():
+    """
+    Default endpoint use for tests demonstration
+    """
     return {"message": "Hello from rate-limiter!"}
 
 
