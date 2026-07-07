@@ -12,14 +12,17 @@ on:
 
 permissions:
     contents: write
-    pull-requests: write
     issues: write
+    pull-requests: write
 
 jobs:
     release-please:
         runs-on: ubuntu-latest
+        environment:
+            name: Development
+
         steps:
-            - uses: googleapis/release-please-action@v3.5.0
-              with:
+        -   uses: googleapis/release-please-action@v3.5.0
+            with:
                 token: ${{ secrets.ACCESS_TOKEN}}
                 release-type: 'simple'
