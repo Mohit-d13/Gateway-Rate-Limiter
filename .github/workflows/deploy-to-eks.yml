@@ -50,7 +50,6 @@ jobs:
                     helm upgrade -i gateway ./deployment/rate-limiter-chart \
                     --set image.tag=${{ inputs.image_tag }} \
                     --namespace gateway \
-                    --create-namespace \
                     --wait \
                     --atomic \
 
