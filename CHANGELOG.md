@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.1](https://github.com/mohitd-13/gateway-rate-limiter/compare/v1.0.0...v1.0.1) (2026-07-07)
+
+
+### Bug Fixes
+
+* release please version ([10374dc](https://github.com/mohitd-13/gateway-rate-limiter/commit/10374dcbebc9797dbaa76aa23cd9c2c5331f3902))
+* release please version 1 ([6dd4604](https://github.com/mohitd-13/gateway-rate-limiter/commit/6dd4604c72954de3069000f4a13bbb231441c0a7))
+* update environment settings and secret references in workflows ([be6cdc1](https://github.com/mohitd-13/gateway-rate-limiter/commit/be6cdc194d2798efd51f1a17f2a29d3c2fc113ff))
+
 ## 1.0.0 (2026-07-07)
 
 
