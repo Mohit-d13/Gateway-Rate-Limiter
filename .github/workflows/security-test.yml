@@ -48,11 +48,6 @@ jobs:
             with:
                 languages: ${{ matrix.language }}
 
-
-        -   name: Link Virtual Environment to CodeQL
-            run: |
-                echo "CODEQL_PYTHON=$(which python)" >> $GITHUB_ENV
-
         -   name: Perform CodeQL Analysis
             uses: github/codeql-action/analyze@v4
             with:
@@ -86,7 +81,7 @@ jobs:
         -   name: Run Trivy vulnerability scanner
             uses: aquasecurity/trivy-action@v0.36.0
             with:
-                image-ref: scan-target:pr-${{ github.event.pull_request.number }}            # Fail the scan if severity is HIGH or CRITICAL
+                image-ref: scan-target:pr-${{ github.event.pull_request.number }}
                 format: 'sarif'
                 output: 'trivy-results.sarif'
 
@@ -94,8 +89,3 @@ jobs:
             uses: github/codeql-action/upload-sarif@v4
             with:
                 sarif_file: 'trivy-results.sarif'
-
-        -   name: Show SARIF info
-            run: |
-                jq '.runs[0].tool.driver.name' trivy-results.sarif
-                jq '.runs[0].results | length' trivy-results.sarif
