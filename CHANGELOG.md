@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/mohitd-13/gateway-rate-limiter/compare/v1.0.1...v1.0.2) (2026-07-07)
+
+
+### Bug Fixes
+
+* add changelog.md to .dockerignore ([1d7a824](https://github.com/mohitd-13/gateway-rate-limiter/commit/1d7a8248c9951eb3ea47a99f1e1fcb4792558949))
+
 ## [1.0.1](https://github.com/mohitd-13/gateway-rate-limiter/compare/v1.0.0...v1.0.1) (2026-07-07)
 
 
