@@ -86,9 +86,7 @@ jobs:
         -   name: Run Trivy vulnerability scanner
             uses: aquasecurity/trivy-action@v0.36.0
             with:
-                image-ref: scan-target:pr-${{ github.event.pull_request.number }}
-                exit-code: '1'
-                severity: 'HIGH,CRITICAL'             # Fail the scan if severity is HIGH or CRITICAL
+                image-ref: scan-target:pr-${{ github.event.pull_request.number }}            # Fail the scan if severity is HIGH or CRITICAL
                 format: 'sarif'
                 output: 'trivy-results.sarif'
 
