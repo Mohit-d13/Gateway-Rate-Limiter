@@ -104,6 +104,6 @@ jobs:
     needs: publish
     steps:
       - name: Deploy Application
-        uses: ./github/workflows/deploy-to-eks.yml
+        uses: ./.github/workflows/deploy-to-eks.yml
         with:
           image_tag: ${{ github.event.release.tag_name }}
