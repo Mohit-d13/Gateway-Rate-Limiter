@@ -61,7 +61,7 @@ jobs:
             docker.io/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}
 
           tags: |
-            type=semver,pattern={{version}},value=${{ github.event.release.tag_name }}
+            type=semver,pattern={{version}},value=v${{ github.event.release.tag_name }}
             type=raw,value=latest
             type=sha
 
@@ -106,4 +106,4 @@ jobs:
       - name: Deploy Application
         uses: ./.github/workflows/deploy-to-eks.yml
         with:
-          image_tag: ${{ github.event.release.tag_name }}
+          image_tag: "v${{ github.event.release.tag_name }}"
