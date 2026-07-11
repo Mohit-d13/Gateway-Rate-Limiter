@@ -1,6 +1,34 @@
 # GATEWAY RATE LIMITER
 
-Gateway rate limiter is a rate limiter that works as an inline filter with a gateway api. Rate limiter is primarily used to limit the amount of traffic a user or client can make to a web appliation within a specific timeframe.
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-Framework-009688)
+![Redis](https://img.shields.io/badge/Redis-Database-red)
+![Docker](https://img.shields.io/badge/Docker-Containerization-2496ED)
+[![Release](https://img.shields.io/github/v/release/mohitd-13/gateway-rate-limiter)](https://github.com/mohitd-13/gateway-rate-limiter/releases)
+[![Integration tests](https://github.com/mohitd-13/gateway-rate-limiter/actions/workflows/integration-test.yml/badge.svg)](https://github.com/mohitd-13/gateway-rate-limiter/actions/workflows/integration-test.yml)
+[![Security scan](https://github.com/mohitd-13/gateway-rate-limiter/actions/workflows/security-test.yml/badge.svg)](https://github.com/mohitd-13/gateway-rate-limiter/actions/workflows/security-test.yml)
+[![Create release](https://github.com/mohitd-13/gateway-rate-limiter/actions/workflows/release-please.yml/badge.svg)](https://github.com/mohitd-13/gateway-rate-limiter/actions/workflows/release-please.yml)
+[![Publish Image](https://github.com/mohitd-13/gateway-rate-limiter/actions/workflows/publish-images.yml/badge.svg)](https://github.com/mohitd-13/gateway-rate-limiter/actions/workflows/publish-images.yml)
+[![Deploy Application](https://github.com/mohitd-13/gateway-rate-limiter/actions/workflows/deploy-to-eks.yml/badge.svg)](https://github.com/mohitd-13/gateway-rate-limiter/actions/workflows/deploy-to-eks.yml)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestration-326CE5)
+![Helm](https://img.shields.io/badge/Helm-Chart-0F1689)
+![AWS EKS](https://img.shields.io/badge/AWS-EKS-FF9900)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+Gateway Rate Limiter is a FastAPI-based rate limiting service designed to operate as an inline Gateway API filter. It implements the token bucket algorithm using Redis as an centralized, in-memory state manager across distributed systems. Github Actions provides the full (CI/CD) automation of application lifecycle from integration, testing, creating new releases and even publishing container images on to container registries, and deploying the app on to local machine with Docker compose as well on to cloud with Kubernetes + Helm.
+
+## Table of Contents
+
+- [Feature](#feature)
+- [Tech Stack](#tech-stack)
+- [Quick Start](#quick-start)
+  - [Prerequisties](#prerequisties)
+  - [Installations](#installations)
+- [Repository Structure](#repository-structure)
+- [Architecture Overview](#architecture-overview)
+- [Example API Endpoints](#example-api-endpoints)
+- [Contribution](#contributing)
+- [License](#license)
 
 ## Feature
 
@@ -18,18 +46,18 @@ Gateway rate limiter is a rate limiter that works as an inline filter with a gat
 
 ## Tech Stack
 
-- Language & Runtime: Python
-- Framework: FastAPI
-- Package Manager: UV
-- Database: Redis
-- Containerization: Docker
-- Container Orchetration: Docker Compose, Kubernetes + Helm Chart
-- CI/CD: Github Actions
-- Cloud Techology: AWS, eksctl
+- **Language & Runtime**: Python
+- **Framework**: FastAPI
+- **Package Manager**: UV
+- **Database**: Redis
+- **Containerization**: Docker
+- **Container Orchetration**: Docker Compose, Kubernetes + Helm Chart
+- **CI/CD**: Github Actions
+- **Cloud Techology**: AWS, eksctl
 
 ## Quick Start
 
-Prerequisties
+### Prerequisties
 
 - Docker & Docker Compose
 - Kubernetes cluster (kind, minikube, k3d etc)
@@ -37,7 +65,7 @@ Prerequisties
 - Helm
 - AWS Account & CLI (only for cloud)
 
-## Installations
+### Installations
 
 1. Clone the repository.
 
@@ -52,6 +80,9 @@ Prerequisties
     mkdir -p secrets/redis-creds
     echo "my-password" > secrets/redis-creds/password
     ```
+
+    [!NOTE]
+    Do not change the name of the path/folder only replace my-password
 
 3. Run the application
 
@@ -121,26 +152,30 @@ Prerequisties
 
 ## Architecture Overview
 
-Backend
+### Backend
 
 - Built with Python framework FastAPI.
 - Handles rate limiting logic, extract identity and configure dynamic policies.
 
-Database
+### Database
 
 - For fast in-memory database redis is used.
 - Atomic operation via Lua Script for faster response time, provides near-instantaneous read and write operations.
 
+### CI/CD Architecture Overview
+
+![CI/CD Architecture Overview](https://private-user-images.githubusercontent.com/141726272/620471584-a4ae5a61-3e82-47c2-94a5-f2de99438493.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3ODM3OTI1MjgsIm5iZiI6MTc4Mzc5MjIyOCwicGF0aCI6Ii8xNDE3MjYyNzIvNjIwNDcxNTg0LWE0YWU1YTYxLTNlODItNDdjMi05NGE1LWYyZGU5OTQzODQ5My5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYwNzExJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MDcxMVQxNzUwMjhaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0yMDdkOGVjMDdmYTcyMGIxMmJkNjYzNTcwMTczZmJjZjhmNzlkMmEyZjZmYjgzMGIxMzY3ODZjYzc2YjZkMjFhJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZyZXNwb25zZS1jb250ZW50LXR5cGU9aW1hZ2UlMkZwbmcifQ.u_95BZ5aRFsKXGC-TJXvUuyk_7OqMER1Zf82Tucxq-A)
+
 ## Example API Endpoints
 
-Admin Routes
+### Admin Routes
 
 | Endpoint                                | Method | Description      |
 |-----------------------------------------|--------|------------------|
 | /admin/policy/{dimension}/{identity_id} | PUT    | Setup new Policy |
 | /admin/policy/{dimension}/{identity_id} | GET    | Read Policy      |
 
-Health Check Route
+### Health Check Route
 
 | Endpoint | Method | Description     |
 |----------|--------|-----------------|
@@ -152,27 +187,32 @@ Health Check Route
 We welcome contributions from developers who want to improve Gateway-Rate-Limiter
 Follow these steps to contribute effectively:
 
-1. Fork the Repository
+1. **Fork the Repository**
+
     - Click the Fork button on Github to create your own copy of the project.
 
-2. Clone Your Fork
+2. **Clone Your Fork**
+
     - Run
 
     ```bash
     git clone https://github.com/mohitd-13/gateway-rate-limiter.git
     ```
 
-3. Set Up Database password
+3. **Set Up Database password**
+
     - Follow the setup instructions in the README to setup your password make sure not to change any path/folder name, if you do change the path/folder name you have to make changes in compose.yaml and helm values.yaml also. You can set the password of your choice.
 
-4. Create a Feature Branch
+4. **Create a Feature Branch**
+
     - Keep your changes organized:
 
     ```bash
     git checkout -b feature/your-feature-name
     ```
 
-5. Use Clear Commit Messages
+5. **Use Clear Commit Messages**
+
     - Make sure to always follow the conventional commit style without it, automated release process will not happen:
         - feat: - new feature
         - fix: - bug fix
@@ -183,13 +223,16 @@ Follow these steps to contribute effectively:
     - Document Your Changes
         - Update README.md or CONTRIBUTING.md if needed
 
-6. Submit a Pull Request (PR)
+6. **Submit a Pull Request (PR)**
+
     - Push your branch and open a PR with:
+
         - A short, clear description of your changes.
         - Any related issue numbers (for example, "Closes #12").
         - Screenshots or example outputs (if applicable).
 
-7. Participate in Code Review
+7. **Participate in Code Review**
+
     - Respond to feedback, make improvements, and help maintain project quality.
 
 ## License
